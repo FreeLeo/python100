@@ -1,4 +1,31 @@
 # 函数的使用方式 https://github.com/jackfrued/Python-100-Days/blob/master/Day16-20/16-20.Python%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6.md
+from functools import wraps
+from time import time
+
+
+def record_time(func):
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time()
+        result = func(*args, **kwargs)
+        print(f"{func.__name__}: {time() - start}秒")
+        return result
+    return wrapper
+
+
+def record(output):
+    def decorate(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            start = time()
+            result = func(*args, **kwargs)
+            output(f"{func.__name__}: {time() - start}秒")
+            return result
+        return wrapper
+    return decorate
+
+
 def add(x, y):
     return x+y
 
@@ -18,22 +45,23 @@ def sum(*args):
     return sum
 
 
+def custom_print(str):
+    print(f"lizhen : {str}")
+
+
+@record(custom_print)
 def create_dict(**kwargs):
     for key, value in kwargs.items():
         print(key, value)
 
 
+@record_time
 def test_args(*args, **kwargs):
     for arg in args:
         print(arg)
     for key, value in kwargs.items():
         print(key, value)
 
-
-def record_time(func):
-
-    @wraps(func)
-    def wrapper(*args, **kwargs)
 
 def main():
     # total = add
